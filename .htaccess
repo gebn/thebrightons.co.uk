@@ -1,5 +1,8 @@
 DirectoryIndex index.txt
 
+# deny access to git
+RedirectMatch 404 /\.git
+
 RewriteEngine On
 
 # get protocol in ${ENV:proto} - http://stackoverflow.com/a/20419821/2765666
