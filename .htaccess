@@ -13,6 +13,10 @@ RewriteCond %{HTTP:CF-Visitor} '"scheme":"https"' [OR]
 RewriteCond %{HTTPS} =on
 RewriteRule ^(.*)$ - [env=proto:https]
 
+# redirect domain aliases (inc. www.)
+RewriteCond %{HTTP_HOST} !^thebrightons\.co\.uk$ [NC]
+RewriteRule ^ %{ENV:proto}://thebrightons.co.uk%{REQUEST_URI} [QSA,R=301,L]
+
 # redirect 404s to / (the trailing ? effectively discards the query string)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
