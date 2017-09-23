@@ -1,0 +1,30 @@
+#!/bin/bash
+
+trap 'exit' ERR
+
+readonly WEBSITE_DIR="$(readlink -f "$1")"
+readonly BUILD_DIR="$(readlink -f "$2")"
+readonly BUILD_ARCHIVE="$(readlink -f "$3")"
+
+if [[ -d $BUILD_DIR ]]; then
+    echo "Build directory already exists" >&2
+    exit 1
+fi
+
+if [[ -f $BUILD_ARCHIVE ]]; then
+    echo "Build archive already exists" >&2
+    exit 2
+fi
+
+echo "Building $WEBSITE_DIR..."
+
+mkdir "$BUILD_DIR"
+
+# create the directory that could be deployed
+rsync -a --prune-empty-dirs "$WEBSITE_DIR/" "$BUILD_DIR"
+
+echo "Distribution created in $BUILD_DIR"
+
+# create a distribution archive for GitHub in case we're building a tag
+GZIP=-9 tar -czf "$BUILD_ARCHIVE" -C "$WEBSITE_DIR" .
+echo "Distribution archive created at $BUILD_ARCHIVE"

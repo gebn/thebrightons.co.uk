@@ -1,0 +1,27 @@
+sudo: false
+language: python
+cache: pip
+python: 3.6
+before_script:
+- npm install -g html-minifier clean-css-cli
+script:
+- ./scripts/build website /dev/shm/thebrightons.co.uk /dev/shm/thebrightons.co.uk.tar.gz
+deploy:
+- provider: script
+  script: ./scripts/deploy thebrightons.co.uk /dev/shm/thebrightons.co.uk qa
+  skip_cleanup: true
+  on:
+    repo: gebn/thebrightons.co.uk
+    branch: qa
+- provider: script
+  script: ./scripts/deploy thebrightons.co.uk /dev/shm/thebrightons.co.uk prod
+  skip_cleanup: true
+  on:
+    tags: true
+- provider: releases
+  api_key:
+    secure: j167Mg0Ry/KsHzMEBe7tGK+XJ2AL1KnSfO+3sV2YPoS5w6rur4vRKc902u+E59hivvQTLt0DMZTsiD7RTYreN3AZCIqKH7rG7r7vPCHCNCjmDtKo45yqKWeuW41bh1yWQ0lSTi8NSixxckEF+oj6tVNDvSjUnkz/5mvN165jMfnIGcYI8KwfimsmFRaMzyVb2emaz9BmEC9RX9Nx+kQehXeZpUdohdL48WAZcqYZr60XjbWcY8Ij2hsG6qV3d9J3f/JlQtfzkmeAJv5DMSKyEAd1B+mOKPD1MkzQflWE8mdA7KLIwn8Cneof0kJbjQLA35p+ncAhErnkONy1KvI3iJ4m9loXZxM82uLz37v8+bqysQfA6kUVzLCibv4tMb3uCOf72udYNJglALvqK8CP9hsOCgXSEEBWiLQg+DQO3W/rJRp6mEq1bfLSMJ5vsKJulxMctuhOWZc+H1kgXpP86HtpP9Hmd/I5PJUcg3xfak+BAs6/1fEeaajEyRWEI/SIDJ8eXiEuU5aoXe2jruERftCBvZS/nTIa3HliwsXbJnq0kYk8BDf185x0BRRwwp/PasDQRdNSZDy3S0QUf1RogBojp/muhHq22SV2ub6LbPoWUK0XBSEdPTNo7i+q8Rfa/MrY+uQRIgzt1Y9cVbGnPUA6peirynX+SJIKiVC0stU=
+  skip_cleanup: true
+  file: /dev/shm/thebrightons.co.uk.tar.gz
+  on:
+    tags: true
